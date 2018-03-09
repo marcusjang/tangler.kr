@@ -2,7 +2,7 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
 const Account = require('../models/account');
-const auth = require('../middlewares/auth')
+const auth = require('../middlewares/auth');
 
 const router = new Router();
 
@@ -110,11 +110,8 @@ router
 	.use(route.logout, auth.user('/'))
 
 	.get(route.logout, async ctx => {
-		let form = new Form('login', ctx);
-
-		await ctx.render('logout', {
-			form: form
-		});
+		ctx.state.form = new Form('logout', ctx);
+		await ctx.render('logout');
 	})
 
 	.post(route.logout, async ctx => {

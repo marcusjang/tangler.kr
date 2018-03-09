@@ -1,10 +1,15 @@
 extends layout
 
 block content
-	h2 Logout
-	form(method='post' action=form.action)
-		input(type='hidden' name='_csrf' value=form.csrf)
-		section
-			div
-				p logout?
-		button submit
+	section.tgr-auth
+		h2 Logout
+		form(method=‘post’ action=form.action)
+			input(type='hidden' name='_csrf' value=form.csrf)
+			section
+				div
+					p #{__('Are you sure you want to log out?')}
+			section.tgr-buttons
+				button
+					i.tgr-btn.circular.check.accent
+					if form.register
+						span #{__('Log out')}
