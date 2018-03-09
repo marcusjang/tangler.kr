@@ -6,6 +6,16 @@
   "Password": "비밀번호",
   "Confirm Password": "비밀번호 확인",
   "Name": "이름",
-  "A user with the given username is already registered": "A user with the given username is already registered",
-  "Passwords don't match": "Passwords don't match"
+  "A user with the given username is already registered": "이미 등록된 아이디입니다",
+  "Passwords don't match": "비밀번호가 일치하지 않습니다",
+  "Are you sure you want to log out?": "정말로 로그아웃하시겠습니까?",
+  "At least 2 characters are required for name": "이름은 최소 2글자 이상이어야 합니다",
+  "Missing credentials": "아이디나 비밀번호가 입력되지 않았습니다",
+  "Password or username is incorrect": "잘못된 아이디 또는 비밀번호입니다",
+  "Successfully logged in as %s": "성공적으로 로그인하였습니다: %s",
+  "No username was given": "아이디를 입력하셔야 합니다",
+  "No password was given": "비밀번호를 입력하셔야 합니다",
+  "username can only consist of 4 to 32 characters of alphabets, numbers, and non-consecutive at signs, underscores, dashes, or dots": "아이디는 4글자 이상 32글자 이하여야 하며, 알파벳, 숫자 및 연속되지 않는 특수문자(@, _, -, .)로 구성됩니다",
+  "Successfully registered as %s": "성공적으로 가입하였습니다: %s",
+  "Successfully logged out": "성공적으로 로그아웃하였습니다"
 }
