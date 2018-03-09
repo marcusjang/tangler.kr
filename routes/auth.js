@@ -91,11 +91,9 @@ router
 **/
 router
 	.get(route.login, async ctx => {
-		let form = new Form('login', ctx);
-
-		await ctx.render('auth', {
-			form: form
-		});
+		// Rendering magic
+		ctx.state.form = new Form('login', ctx);
+		await ctx.render('auth');
 	})
 
 	.post(route.login, passport.authenticate('local'), ctx => {
@@ -121,7 +119,7 @@ router
 
 	.post(route.logout, async ctx => {
 		ctx.logout();
-		ctx.body = 'logout';
+		ctx.redirect('/');
 	});
 
 module.exports = router.routes();
