@@ -8,16 +8,40 @@ body {
 
 	&.overlay {
 		overflow: hidden;
-
-		div#overlay {
-			left: 0;
-			top: 0;
-			width: 100%;
-			height: 100%;
-			position: fixed;
-			z-index: 3;
-		}
 	}
+}
+
+#overlay {
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	will-change: background-color;
+	z-index: 3;
+	-webkit-tap-highlight-color: transparent;
+
+	animation-duration: 300ms;
+	animation-fill-mode: both;
+	animation-timing-function: ease-out;
+
+	&.visible {
+		animation-name: overlayFadeIn;
+	}
+
+	&.hidden {
+		animation-name: overlayFadeOut;
+	}
+}
+
+@keyframes overlayFadeIn {
+	0% { background-color: none; }
+	100% { background-color: rgba($dark-slate, 0.05); display: block; }
+}
+
+@keyframes overlayFadeOut {
+	0% { background-color: rgba($dark-slate, 0.05); }
+	100% { background-color: none; display: none; }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -142,8 +166,7 @@ div.tgr-flash {
 }
 body.overlay #tgr-main-nav {
 	transform: none;
-	box-shadow: 0 0 15px 0 rgba($dark-slate, 0.15),
-		0 0 100vmax 100vmax rgba($dark-slate, 0.05);		
+	box-shadow: 0 0 15px 0 rgba($dark-slate, 0.15);	
 }
 
 .tgr-logo {

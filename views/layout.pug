@@ -16,13 +16,14 @@ html
 					div.tgr-flash
 						p(class=message.type)
 							i.la.la-2x
-							span #{__(message.text)}
+							span #{message.text}
 						script.
 							(function() {
 								var flash = document.currentScript.parentNode;
+								var delay = '#{message.text}'.length < 40 ? 4000 : 8000;
 								var timeout = window.setTimeout(function() {
 									flash.classList.add('animate');
-								}, 4000);
+								}, delay);
 
 								flash.addEventListener('animationend', function() {
 									if (this.nextSibling || this.previousSibling) {
@@ -43,7 +44,7 @@ html
 				ul.tgr-nav-auth
 					if user
 						li
-							a(href='/user'+user.id)
+							a(href='/u/'+user.id)
 								i.la
 								span #{user.name}
 						li
@@ -64,16 +65,33 @@ html
 					i #{site.name}
 		block content
 		footer
-		div#overlay
+		div#overlay.hidden(style='display:none;')
 		script.
 			(function() {
+				var overlay = document.getElementById('overlay');
 				document.getElementById('tgr-btn-overlay')
 					.addEventListener('click', function(e) {
 						document.body.classList.toggle('overlay');
+						overlay.classList.toggle('hidden');
+						overlay.classList.toggle('visible');
+						overlay.style.display = '';
 						e.preventDefault();
 					});
-				document.getElementById('overlay')
-					.addEventListener('click', function(e) {
-						document.body.classList.remove('overlay');
-					});
+				overlay.addEventListener('animationend', function(e) {
+					if (e.animationName == 'overlayFadeOut') {
+							overlay.style.display = 'none';
+					}
+				});
+				overlay.addEventListener('click', function() {
+					document.body.classList.remove('overlay');
+					overlay.classList.add('hidden');
+					overlay.classList.remove('visible');
+				});
+				/*
+				overlay.addEventListener('transitionend', function() {
+					if (!document.body.classList.contains('overlay')) {
+						overlay.style.display = 'none';
+					}
+				});
+				*/
 			})();
