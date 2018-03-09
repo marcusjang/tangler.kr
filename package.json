@@ -4,7 +4,7 @@
   "description": "Tangler.kr codebase",
   "main": "server.js",
   "scripts": {
-    "test": "DEBUG=server,app:* PORT=3003 nodemon server.js --config nodemon.json & node-sass --watch ./public/css/style.scss --recursive --output ./public/css"
+    "test": "DEBUG=server,app:* nodemon server.js --config nodemon.json & node-sass --watch ./public/css/style.scss --recursive --output ./public/css"
   },
   "repository": "none",
   "keywords": [
