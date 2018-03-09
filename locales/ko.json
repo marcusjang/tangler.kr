@@ -1,0 +1,11 @@
+{
+  "Log in": "로그인",
+  "Register": "회원가입",
+  "Log out": "로그아웃",
+  "Username": "아이디",
+  "Password": "비밀번호",
+  "Confirm Password": "비밀번호 확인",
+  "Name": "이름",
+  "A user with the given username is already registered": "A user with the given username is already registered",
+  "Passwords don't match": "Passwords don't match"
+}

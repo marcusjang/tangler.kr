@@ -1,0 +1,8 @@
+extends layout
+
+block content
+	if user
+		h3 #{user.username}
+		p #{user.id}
+	else
+		p no user

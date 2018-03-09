@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	h2 Logout
+	form(method='post' action=form.action)
+		input(type='hidden' name='_csrf' value=form.csrf)
+		section
+			div
+				p logout?
+		button submit

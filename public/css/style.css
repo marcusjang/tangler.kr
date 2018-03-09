@@ -1,0 +1,225 @@
+/**
+*	A whole bunch of colours!
+**/
+/**
+*	Buttons
+**/
+.tgr-btn.circular {
+  width: 3em;
+  height: 3em;
+  background-color: #99a4b5;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 50%;
+  display: block;
+  margin: 0 .5em;
+  transition: transform 200ms ease-out;
+  will-change: transform; }
+  .tgr-btn.circular.accent {
+    background-color: #cc1133; }
+  .tgr-btn.circular.check {
+    background-image: url("../images/icon-check.svg"); }
+  .tgr-btn.circular.plus {
+    background-image: url("../images/icon-plus.svg"); }
+  .tgr-btn.circular + span {
+    display: block;
+    margin-top: 1em; }
+
+.tgr-btn.tgr-btn {
+  transition: transform 80ms ease-out;
+  transform: scale(1); }
+
+.tgr-btn.tgr-btn:hover {
+  transform: scale(1.1); }
+
+.tgr-btn.tgr-btn:active, .tgr-btn.tgr-btn:focus {
+  transform: scale(0.9); }
+
+/**
+*	Icons
+**/
+.tgr-icon {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: contain; }
+  .tgr-icon.user {
+    background-image: url("../images/icon-user.svg"); }
+  .tgr-icon.key {
+    background-image: url("../images/icon-key.svg"); }
+
+html {
+  font-size: 18px; }
+
+body {
+  background: white;
+  font-family: "NanumBarunGothic", sans-serif; }
+  body.overlay {
+    overflow: hidden; }
+    body.overlay div#overlay {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      z-index: 3; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 100; }
+
+section.tgr-flash {
+  right: 0;
+  height: 0;
+  position: fixed; }
+
+div.tgr-flash {
+  width: 20em;
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding: 15px; }
+  div.tgr-flash p {
+    align-items: stretch;
+    border-radius: 10px;
+    box-shadow: 0 0 15px 0 rgba(97, 110, 134, 0.15);
+    color: white;
+    display: flex;
+    margin: 0;
+    overflow: hidden;
+    padding: .5em; }
+    div.tgr-flash p span {
+      box-sizing: border-box;
+      margin: .5em; }
+  div.tgr-flash p.error {
+    background: #cc1133; }
+    div.tgr-flash p.error i.la:before {
+      content: "\f1ce"; }
+  div.tgr-flash p.info {
+    background: #44aa33; }
+    div.tgr-flash p.info i.la:before {
+      content: "\f24b"; }
+  div.tgr-flash.animate {
+    animation-duration: 500ms;
+    animation-name: flashOut;
+    animation-timing-function: ease-out; }
+
+@keyframes flashOut {
+  0% {
+    opacity: 1;
+    transform: none; }
+  100% {
+    opacity: 0;
+    transform: translateX(100%); } }
+
+.tgr-header .tgr-logo {
+  z-index: 5; }
+
+#tgr-main-nav {
+  top: 0;
+  left: 0;
+  width: 80vmin;
+  max-width: 240px;
+  height: 100%;
+  background: white;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 3vh 0;
+  position: fixed;
+  z-index: 4;
+  transform: translateX(-100%);
+  transition-property: transform, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: ease-out;
+  will-change: transform, box-shadow; }
+  #tgr-main-nav ul {
+    box-sizing: border-box;
+    color: #181a1a;
+    font-size: 1.5em;
+    margin: 2vh 25px;
+    padding: 0; }
+    #tgr-main-nav ul.tgr-nav-auth {
+      color: #475750;
+      font-size: 0.9em; }
+  #tgr-main-nav li {
+    font-family: "NanumSquare", sans-serif;
+    font-weight: 100;
+    list-style: none; }
+    #tgr-main-nav li a {
+      border-bottom: 1px solid #eeeeee;
+      color: inherit;
+      display: block;
+      padding: 0.5em;
+      text-decoration: none; }
+    #tgr-main-nav li:last-of-type a {
+      border-bottom: 0; }
+
+body.overlay #tgr-main-nav {
+  transform: none;
+  box-shadow: 0 0 15px 0 rgba(97, 110, 134, 0.15), 0 0 100vmax 100vmax rgba(97, 110, 134, 0.05); }
+
+.tgr-logo {
+  left: 4vmin;
+  bottom: 4vmin;
+  margin: 0;
+  position: fixed; }
+  .tgr-logo a {
+    text-decoration: none; }
+  .tgr-logo i {
+    font-size: 0;
+    visibility: hidden; }
+  .tgr-logo .tgr-icon {
+    width: 18vmin;
+    height: 18vmin;
+    max-width: 60px;
+    max-height: 60px;
+    min-width: 30px;
+    min-height: 30px;
+    background-image: url("../images/logo-icon.svg");
+    display: block;
+    will-change: transfork; }
+
+.tgr-auth {
+  width: 350px;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 10vh 0; }
+  .tgr-auth h2 {
+    font-size: 2em;
+    margin: 5vh 0;
+    text-align: center; }
+  .tgr-auth form .tgr-inputs {
+    border-radius: 10px;
+    box-shadow: 2px 2px 15px 0 rgba(97, 110, 134, 0.1), 5px 5px 35px 0 rgba(97, 110, 134, 0.05);
+    overflow: hidden; }
+  .tgr-auth form .tgr-inputs div:last-of-type label {
+    border-bottom: 0; }
+  .tgr-auth form .tgr-inputs div {
+    padding: 0 1em; }
+  .tgr-auth label {
+    width: 100%;
+    align-items: stretch;
+    border-bottom: 1px solid #eeeeee;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 30px 1fr; }
+  .tgr-auth label i {
+    width: 100%;
+    color: #616e86;
+    text-align: center; }
+  .tgr-auth input, .tgr-auth textarea {
+    width: 1fr;
+    border: 0;
+    box-sizing: border-box;
+    outline: none;
+    padding: 1em .8em; }
+  .tgr-auth .tgr-buttons {
+    margin: 5vh 0;
+    text-align: center; }
+    .tgr-auth .tgr-buttons a, .tgr-auth .tgr-buttons button {
+      background: none;
+      border: none;
+      color: #181a1a;
+      cursor: pointer;
+      display: inline-block;
+      margin: 0 .5em;
+      text-decoration: none; }
