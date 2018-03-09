@@ -22,17 +22,46 @@ class Form {
 	}
 }
 
+// Authenticate subroutine using passport.authenticate()
+async function authenticate(ctx, next, message) {
+	await passport.authenticate('local', async (err, user, info) => {
+
+		// Throw authentication errors
+		if (err) throw err;
+		// and invalid user errors
+		if (!user) throw new Error(info.message);
+
+		// Wait for login
+		await ctx.login(user);
+
+		// Build a welcome flash message
+		ctx.session.flash = [{
+			type: 'info',
+			text: ctx.state.__(message, user.name)
+		}];
+
+		// Redirect
+		let redirect = ctx.session.redirect || '/user/' + user.id;
+		if (ctx.session.redirect) delete ctx.session.redirect;
+		ctx.redirect(redirect);
+
+	})(ctx, next);
+}
+
 /**
 *			/auth/register
 **/
 router
 	.get(route.register, async ctx => {
+		// Render the register form
 		ctx.state.form = new Form('register', ctx);
 		await ctx.render('auth');
 	})
 
 	.post(route.register, async (ctx, next) => {
+		// Shorthand for ctx.request.body
 		let body = ctx.request.body;
+
 		try {
 			// Catch if the password confirmation doesn't matche
 			if (body.password !== body.confirmPassword) {
@@ -48,12 +77,8 @@ router
 				body.password
 			);
 
-			// and authentication through passport
-			await passport.authenticate('local')(ctx, next);
-
-			let redirect = ctx.session.redirect || '/'; // Should be something like /user/:id later
-			if (ctx.session.redirect) delete ctx.session.redirect;
-			ctx.redirect(redirect);
+			// and authenticate then redirect
+			await authenticate(ctx, next, 'Successfully registered as %s');
 
 		} catch (err) {
 			// Let's construct a flash array first
@@ -66,14 +91,14 @@ router
 				for (const key in err.errors) {
 					flash.push({
 						type: 'error',
-						text: err.errors[key].message
+						text: ctx.state.__(err.errors[key].message)
 					});
 				}
 			} else {
 				// If it's not a mongoose validation error, just push once
 				flash.push({
 					type: 'error',
-					text: err.message
+					text: ctx.state.__(err.message)
 				});
 			}
 
@@ -91,15 +116,28 @@ router
 **/
 router
 	.get(route.login, async ctx => {
-		// Rendering magic
+		// Render the login form
 		ctx.state.form = new Form('login', ctx);
 		await ctx.render('auth');
 	})
 
-	.post(route.login, passport.authenticate('local'), ctx => {
-		let redirect = ctx.session.redirect || '/';
-		if (ctx.session.redirect) delete ctx.session.redirect;
-		ctx.redirect(redirect);
+	.post(route.login, async (ctx, next) => {
+		try {
+			// Authenticate then redirect
+			await authenticate(ctx, next, 'Successfully logged in as %s');
+
+		} catch (err) {
+
+			// Set the flash to the ctx.state directly since we won't redirect
+			ctx.state.flash = [{
+				type: 'error',
+				text: ctx.state.__(err.message)
+			}];
+
+			// Rendering magic
+			ctx.state.form = new Form('login', ctx);
+			await ctx.render('auth');			
+		}
 	});
 
 /**
@@ -110,11 +148,19 @@ router
 	.use(route.logout, auth.user('/'))
 
 	.get(route.logout, async ctx => {
+		// Render the logout form
 		ctx.state.form = new Form('logout', ctx);
 		await ctx.render('logout');
 	})
 
-	.post(route.logout, async ctx => {
+	.post(route.logout, ctx => {
+		// Build the success flash message
+		ctx.session.flash = [{
+			type: 'info',
+			text: ctx.state.__('Successfully logged out')
+		}];
+
+		// Then logout and redirect
 		ctx.logout();
 		ctx.redirect('/');
 	});
