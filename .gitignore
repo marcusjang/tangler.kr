@@ -60,5 +60,8 @@ typings/
 # next.js build output
 .next
 
+# Project specific ignores
+public/css/style.css
 .ftpconfig
 config.json
+
