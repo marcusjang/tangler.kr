@@ -12,7 +12,7 @@ block content
 				div
 					label
 						i.tgr-icon.user
-						input(type='text' name='username' placeholder=__('Username') value=(form.user ? form.user.username : false))
+						input(type='text' name='username' placeholder=__('Username') value=(form.user ? form.user.username : false) autocomplete='off' required spellcheck='false')
 				div
 					label
 						i.tgr-icon.key

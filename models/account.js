@@ -5,7 +5,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const counter = require('./counter');
 
 let Account = new Schema({
-	username: { type: String, required: true, unique: true, lowercase: true, validate: {
+	username: { type: String, required: true, unique: true, validate: {
 		validator: (v) => {
 			let length = /^[a-zA-Z0-9._@-]{4,32}$/.test(v);
 			let chars = !(/[._@-]{2,}/.test(v));
