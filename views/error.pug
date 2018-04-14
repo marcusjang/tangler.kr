@@ -1,6 +1,7 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+	article(style="max-width:90vw;margin:0 auto;")
+		h1= message
+		h2= error.status
+		pre(style="overflow:scroll;color:white;background:#333; padding:1em;") #{error.stack}

@@ -5,25 +5,20 @@ const Account = require('../models/account');
 const auth = require('../middlewares/auth');
 
 const router = new Router();
-
-const route = {
-	register: '/register',
-	login: '/',
-	logout: '/logout'
-}
+const routes = new Object();
 
 // Form class to render views easily with action, csrf and user
 class Form {
 	constructor(mode, ctx) {
 		this.register = (mode === 'register') ? true : false;
-		this.action = ctx.originalUrl,
+		this.action = ctx.originalUrl;
 		this.csrf = ctx.csrf;
-		this.user = ctx.request.body;
+		this.user = ctx.request.body || { username: '', name: '' };
 	}
 }
 
 // Authenticate subroutine using passport.authenticate()
-async function authenticate(ctx, next, message) {
+const authenticate = async (ctx, next, message) => {
 	await passport.authenticate('local', async (err, user, info) => {
 
 		// Throw authentication errors
@@ -41,7 +36,7 @@ async function authenticate(ctx, next, message) {
 		}];
 
 		// Redirect
-		let redirect = ctx.session.redirect || '/user/' + user.id;
+		let redirect = ctx.session.redirect || '/u/' + user.id;
 		if (ctx.session.redirect) delete ctx.session.redirect;
 		ctx.redirect(redirect);
 
@@ -49,16 +44,76 @@ async function authenticate(ctx, next, message) {
 }
 
 /**
+*			/auth/login
+**/
+routes.login = new Router();
+routes.login.path = '/';
+routes.login
+	.get('/', async ctx => {
+		// Render the login form
+		ctx.state.form = new Form('login', ctx);
+		await ctx.render('auth');
+	})
+
+	.post('/', async (ctx, next) => {
+		try {
+			// Authenticate then redirect
+			await authenticate(ctx, next, 'Successfully logged in as %s');
+
+		} catch (err) {
+
+			// Set the flash to the ctx.state directly since we won't redirect
+			ctx.state.flash = [{
+				type: 'error',
+				text: ctx.state.__(err.message)
+			}];
+
+			// Rendering magic
+			ctx.state.form = new Form('login', ctx);
+			await ctx.render('auth');			
+		}
+	});
+
+/**
+*			/auth/logout
+**/
+routes.logout = new Router();
+routes.logout.path = '/logout';
+routes.logout
+	// Do a user check first
+	.use('/', auth.user('/'))
+
+	.get('/', async ctx => {
+		// Render the logout form
+		ctx.state.form = new Form('logout', ctx);
+		await ctx.render('auth.logout');
+	})
+
+	.post('/', ctx => {
+		// Build the success flash message
+		ctx.session.flash = [{
+			type: 'info',
+			text: ctx.state.__('Successfully logged out')
+		}];
+
+		// Then logout and redirect
+		ctx.logout();
+		ctx.redirect('/');
+	});
+
+/**
 *			/auth/register
 **/
-router
-	.get(route.register, async ctx => {
+routes.register = new Router();
+routes.register.path = '/register';
+routes.register
+	.get('/', async ctx => {
 		// Render the register form
 		ctx.state.form = new Form('register', ctx);
 		await ctx.render('auth');
 	})
 
-	.post(route.register, async (ctx, next) => {
+	.post('/', async (ctx, next) => {
 		// Shorthand for ctx.request.body
 		let body = ctx.request.body;
 
@@ -111,58 +166,14 @@ router
 		}
 	});
 
-/**
-*			/auth/login
-**/
-router
-	.get(route.login, async ctx => {
-		// Render the login form
-		ctx.state.form = new Form('login', ctx);
-		await ctx.render('auth');
-	})
-
-	.post(route.login, async (ctx, next) => {
-		try {
-			// Authenticate then redirect
-			await authenticate(ctx, next, 'Successfully logged in as %s');
-
-		} catch (err) {
-
-			// Set the flash to the ctx.state directly since we won't redirect
-			ctx.state.flash = [{
-				type: 'error',
-				text: ctx.state.__(err.message)
-			}];
-
-			// Rendering magic
-			ctx.state.form = new Form('login', ctx);
-			await ctx.render('auth');			
-		}
-	});
-
-/**
-*			/auth/logout
-**/
-router
-	// Do a user check first
-	.use(route.logout, auth.user('/'))
-
-	.get(route.logout, async ctx => {
-		// Render the logout form
-		ctx.state.form = new Form('logout', ctx);
-		await ctx.render('logout');
-	})
-
-	.post(route.logout, ctx => {
-		// Build the success flash message
-		ctx.session.flash = [{
-			type: 'info',
-			text: ctx.state.__('Successfully logged out')
-		}];
-
-		// Then logout and redirect
-		ctx.logout();
-		ctx.redirect('/');
-	});
+// Mount the routes to the main router
+for (const key in routes) {
+	const route = routes[key];
+	router.use(
+		route.path,
+		route.routes(),
+		route.allowedMethods()
+	);
+}
 
 module.exports = router.routes();

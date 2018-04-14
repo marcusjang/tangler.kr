@@ -1,5 +1,5 @@
 {
-	"delay": 500,
+	"delay": 200,
 	"ignore": [
 		"public/*",
 		"mode_modules/**/node_modules"

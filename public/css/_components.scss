@@ -1,15 +1,15 @@
 /**
 *	Buttons
 **/
-.tgr-btn {
+.btn {
 	&.circular {
 		width: 3em;
 		height: 3em;
 
 		background-color: $slate;
-		background-position: 50% 50%;
+		background-position: center;
 		background-repeat: no-repeat;
-		background-size: contain;
+		background-size: 100% 100%;
 		border-radius: 50%;
 		display: block;
 		margin: 0 .5em;
@@ -17,36 +17,43 @@
 		will-change: transform;
 
 		&.accent { background-color: $red; }
-		&.check { background-image: url('../images/icon-check.svg'); }
-		&.plus { background-image: url('../images/icon-plus.svg'); }
+		&.check { background-image: url("../images/icon-check.svg"); }
+		&.plus { background-image: url("../images/icon-plus.svg"); }
 
 		& + span {
 			display: block;
 			margin-top: 1em;
 		}
 	}
+}
 
-	&.tgr-btn {
-		transition: transform 80ms ease-out;
-		transform: scale(1.0);
-	}
+.btn {
+	transition: transform 80ms ease-out;
+	transform: scale(1.0);
+}
 
-	&.tgr-btn:hover {
-		transform: scale(1.1);
-	}
+.btn:hover,
+a:hover .btn,
+button:hover .btn {
+	transform: scale(1.1);
+}
 
-	&.tgr-btn:active, &.tgr-btn:focus {
-		transform: scale(0.9);
-	}
+.btn:active,
+a:active .btn,
+button:active .btn,
+.btn:focus,
+a:focus .btn,
+button:focus .btn {
+	transform: scale(0.9);
 }
 
 /**
 *	Icons
 **/
-.tgr-icon {
+.icon {
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 	background-size: contain;
-	&.user { background-image: url('../images/icon-user.svg'); }
-	&.key { background-image: url('../images/icon-key.svg'); }
+	&.username { background-image: url('../images/icon-user.svg'); }
+	&.password { background-image: url('../images/icon-key.svg'); }
 }

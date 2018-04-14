@@ -1,0 +1,16 @@
+extends layout
+
+include form.components.pug
+
+block content
+	section.form
+		h2 #{__('Log out')}
+		form(method='post' action=form.action)
+			input(type='hidden' name='_csrf' value=form.csrf)
+
+			section
+				p(style='text-align:center; margin-bottom:3em;')
+					| #{__('Are you sure you want to log out?')}
+
+			section.buttons
+				+button('button', 'check', 'Log out')(class='accent')

@@ -1,0 +1,168 @@
+.form {
+	max-width: 90%;
+
+	margin: 0 auto;
+	padding: 10vh 0;
+
+	h2 {
+		font-size: 2em;
+		margin: 5vh 0;
+		text-align: center;
+	}
+
+	form .inputs {
+		border-radius: 10px;
+		box-shadow: 2px 2px 15px 0 rgba($dark-slate, 0.1),
+			5px 5px 35px 0 rgba($dark-slate, 0.05);
+	}
+
+	form .inputs div {
+		padding: 0 18px;
+		position: relative;
+	}
+
+	label {
+		width: 100%;
+
+		align-items: stretch;
+		box-sizing: border-box;
+		display: block;
+	}
+
+	div + div label {
+		border-top: 1px solid $light-grey;
+	}
+
+	label i {
+		width: 100%;
+
+		color: $dark-slate;
+		text-align: center;
+	}
+
+	input, textarea {
+		width: 100%;
+
+		border: 0;
+		box-sizing: border-box;
+		outline: none;
+		opacity: 0.6;
+		padding: 1em 12px;
+
+		transition: opacity 200ms ease-out;
+		will-change: opacity;
+
+		&:focus {
+			opacity: 1;
+		}
+
+		&[readonly] {
+			opacity: 0.2;
+		}
+
+		&.error + span {
+			top: 0;
+			right: 15px;
+			width: 12px;
+			height: 100%;
+
+			align-items: center;
+			display: flex;
+			flex-direction: row;
+			pointer-events: none;
+			position: absolute;
+
+			&:after {
+				width: 12px;
+				height: 12px;
+				background: $red;
+				border-radius: 50%;
+				content: "";
+				display: block;
+			}
+		}
+	}
+
+	.buttons {
+		margin: 5vh 0;
+		text-align: center;
+
+		a, button {
+			background: none;
+			border: none;
+			color: $slate;
+			cursor: pointer;
+			display: inline-block;
+			margin: 0 .5em;
+			outline: none;
+			text-decoration: none;
+			transition: color 200ms ease-out;
+			will-change: color;
+
+			&:hover {
+				color: $dark-slate;
+			}
+		}
+
+		button {
+			transition-property: transform, opacity;
+			transition-duration: 200ms;
+			transition-timing-function: ease-out;
+			will-change: opacity, transform;
+		}
+	}
+
+	form.error .buttons button {
+		opacity: 0.5;
+		pointer-events: none;
+		transform: scale(0.95);
+	}
+
+	&.auth {
+		width: 350px;
+
+		label {
+			display: grid;
+			grid-template-columns: 30px 1fr;
+		}
+	}
+
+	&.admin {
+		width: 650px;
+
+		label span:first-child {
+			color: $slate;
+			display: block;
+			font-size: 0.9em;
+			padding: 1em 0 0;
+		}
+
+		input {
+			padding-top: .5em;
+		}
+	}
+}
+
+#admin-privilege {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	padding: .5em;
+
+	i {
+		width: 2em;
+		height: 2em;
+		color: white;
+		display: block;
+		font-size: 0.9em;
+		font-style: normal;
+		line-height: 2em;
+		margin: .5em;
+		text-align: center;
+	}
+}
+
+::placeholder {
+	color: $dark-slate;
+}

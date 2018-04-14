@@ -1,0 +1,19 @@
+extends layout
+
+
+block content
+	p things will be added for this barren admin page
+	if docs
+		table
+			tr
+				each field, index in model.fields
+					th(class=(index===0) ? 'index' : '')
+						span #{field.title}
+			each doc in docs
+				tr
+					each field, index in model.fields
+						td
+							if index === 0
+								a(href=urlScheme + doc[model.key]) #{doc[field.slug]}
+							else
+								span #{doc[field.slug]}

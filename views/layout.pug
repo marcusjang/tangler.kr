@@ -1,97 +1,89 @@
+mixin nav-item(href, title)
+	li
+		a(href=href)
+			i.la
+			span #{title}
+
 html
 	head
 		meta(name='viewport' content='width=device-width, initial-scale=1')
 
+		link(rel='stylesheet' href='//maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css')
 		link(rel='stylesheet' href='/public/css/normalize.css')
 		link(rel='stylesheet' href='/public/css/style.css')
-		link(rel='stylesheet' href='//maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css')
+
+		script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
 
 		title #{site.name}
 
 		block head
+
 	body
-		if flash
-			section.tgr-flash
-				each message in flash
-					div.tgr-flash
-						p(class=message.type)
-							i.la.la-2x
-							span #{message.text}
-						script.
-							(function() {
-								var flash = document.currentScript.parentNode;
-								var delay = '#{message.text}'.length < 40 ? 4000 : 8000;
-								var timeout = window.setTimeout(function() {
-									flash.classList.add('animate');
-								}, delay);
 
-								flash.addEventListener('animationend', function() {
-									if (this.nextSibling || this.previousSibling) {
-										this.remove();
-									} else {
-										this.parentNode.remove();
-									}
-								});
+		header#header
 
-								flash.addEventListener('click', function() {
-									this.classList.add('animate');
-									window.clearTimeout(timeout);
-								});
-							})();
-		header.tgr-header
-			nav#tgr-main-nav
+			section#flash(is='transition-group' name='animate')
+				div(is='flash', v-for='(message, index) in messages', :key='message.id', :type='message.type', :text='message.text', :index='index', v-on:remove='messages.splice(index, 1)')
+
+			script(src='/public/js/flash.js')
+			script.
+				(function() {
+					flash.$mount('#flash');
+					document.currentScript.remove();
+				})();
+
+			if (getMessages() !== '[]')
+				script.
+					(function() {
+						var messages = !{ getMessages() };
+						for (var i = 0; i < messages.length; i++) {
+							flash.addMessage(messages[i].type, messages[i].text);
+						}
+						document.currentScript.remove();
+					})();
+
+			nav#main-nav
 				block nav
-				ul.tgr-nav-auth
+				ul.nav-auth
 					if user
-						li
-							a(href='/u/'+user.id)
-								i.la
-								span #{user.name}
-						li
-							a(href='/auth/logout')
-								i.la
-								span #{__('Log out')}
+						if user.level > 1
+							+nav-item('/admin', __('Admin'))
+						+nav-item('/u/'+user.id, user.name)
+						+nav-item('/auth/logout', __('Log out'))
+
 					else
-						li
-							a(href='/auth')
-								i.la
-								span #{__('Log in')}
-						li
-							a(href='/auth/register')
-								i.la
-								span #{__('Register')}
-			h1.tgr-logo
-				a#tgr-btn-overlay.tgr-btn.tgr-icon(href='#')
-					i #{site.name}
-		block content
-		footer
-		div#overlay.hidden(style='display:none;')
-		script.
-			(function() {
-				var overlay = document.getElementById('overlay');
-				document.getElementById('tgr-btn-overlay')
-					.addEventListener('click', function(e) {
-						document.body.classList.toggle('overlay');
-						overlay.classList.toggle('hidden');
-						overlay.classList.toggle('visible');
-						overlay.style.display = '';
-						e.preventDefault();
+						+nav-item('/auth', __('Log in'))
+						+nav-item('/auth/register', __('Register'))
+
+			h1.logo
+				a#btn-overlay.btn.icon(href='#')
+					i #{site.name}	
+
+			div#overlay.hidden(style='display:none;')
+			script.
+				(function() {
+					var overlay = document.getElementById('overlay');
+					document.getElementById('btn-overlay')
+						.addEventListener('click', function(e) {
+							document.body.classList.toggle('overlay');
+							overlay.classList.toggle('hidden');
+							overlay.classList.toggle('visible');
+							overlay.style.display = '';
+							e.preventDefault();
+						});
+					overlay.addEventListener('animationend', function(e) {
+						if (e.animationName == 'overlayFadeOut') {
+								overlay.style.display = 'none';
+						}
 					});
-				overlay.addEventListener('animationend', function(e) {
-					if (e.animationName == 'overlayFadeOut') {
-							overlay.style.display = 'none';
-					}
-				});
-				overlay.addEventListener('click', function() {
-					document.body.classList.remove('overlay');
-					overlay.classList.add('hidden');
-					overlay.classList.remove('visible');
-				});
-				/*
-				overlay.addEventListener('transitionend', function() {
-					if (!document.body.classList.contains('overlay')) {
-						overlay.style.display = 'none';
-					}
-				});
-				*/
-			})();
+					overlay.addEventListener('click', function() {
+						document.body.classList.remove('overlay');
+						overlay.classList.add('hidden');
+						overlay.classList.remove('visible');
+					});
+					})();
+
+		block content
+
+		footer#footer
+			p &copy; #{site.footerYear} #{site.name}, #[wbr]All rights reserved

@@ -4,7 +4,7 @@
   "description": "Tangler.kr codebase",
   "main": "server.js",
   "scripts": {
-    "test": "DEBUG=server,app:* nodemon server.js --config nodemon.json & node-sass --watch ./public/css/style.scss --recursive --output ./public/css"
+    "start": "DEBUG=server,app:* nodemon server.js --config nodemon.json & node-sass --watch ./public/css/style.scss --recursive --output ./public/css"
   },
   "repository": "none",
   "keywords": [
@@ -34,7 +34,7 @@
     "mongoose": "^5.0.7",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.0",
-    "pug": "^2.0.0-rc.4",
+    "pug": "^2.0.3",
     "y18n": "^4.0.0"
   },
   "devDependencies": {}

@@ -17,5 +17,15 @@
   "No password was given": "비밀번호를 입력하셔야 합니다",
   "username can only consist of 4 to 32 characters of alphabets, numbers, and non-consecutive at signs, underscores, dashes, or dots": "아이디는 4글자 이상 32글자 이하여야 하며, 알파벳, 숫자 및 연속되지 않는 특수문자(@, _, -, .)로 구성됩니다",
   "Successfully registered as %s": "성공적으로 가입하였습니다: %s",
-  "Successfully logged out": "성공적으로 로그아웃하였습니다"
+  "Successfully logged out": "성공적으로 로그아웃하였습니다",
+  "Admin level": "관리자 레벨",
+  "Confirm": "확인",
+  "Admin Privilege Settings": "관리자 권한 설정",
+  "Privilege": "권한",
+  "Account Settings": "계정 설정",
+  "Successfully updated \"%s\" entry \"%s\"": "%s \"%s\"을(를) 성공적으로 수정하였습니다.",
+  "Account": "계정",
+  "level should be a integer between 0 and 255.": "관리자 권한은 0과 255 사이의 정수여야 합니다.",
+  "Admin": "관리자",
+  "level should be a integer between 0 and 7.": "관리자 권한은 0과 7 사이의 정수여야 합니다."
 }

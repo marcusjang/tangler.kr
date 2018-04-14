@@ -64,4 +64,9 @@ typings/
 public/css/style.css
 .ftpconfig
 config.json
+yarn.lock
+.DS_Store
+.DS_Store?
 
+
+public/.DS_Store

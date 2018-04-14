@@ -1,0 +1,39 @@
+extends layout
+
+include form.components.pug
+
+block content
+	script.
+		var data = {};
+
+	section.form.admin(class=form.name)
+		h2 #{__(form.title)}
+
+		form(method='post' action=form.action)
+			input(type='hidden' name='_csrf' value=form.csrf)
+
+			section.inputs
+				each field, index in form.fields
+					+form-field(field.type, field.slug, field.title, field.value, true)(readonly=(index===0), v-model=field.slug)
+
+						if field.script
+							script.
+								(!{field.script})();
+
+						script.
+							(function() {
+								var value = '#{field.value}';
+								data.#{field.slug} = (isNaN(value*1)) ? value : value*1;
+								document.currentScript.remove();
+							})();
+
+			section.buttons
+				+button('button', 'check', 'Confirm')(class='accent')
+				
+		script.
+			var form = new Vue({
+				el: '.form.admin > form',
+				data: data,
+				beforeCreate: !{ form.beforeCreate ? form.beforeCreate : 'undefined' }
+			});
+

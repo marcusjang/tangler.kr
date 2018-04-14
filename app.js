@@ -2,10 +2,6 @@
 const Koa = require('koa');
 const debug = require('debug')('app');
 const mount = require('koa-mount');
-const mongoose = require('mongoose');
-const csrf = require('koa-csrf');
-const passport = require('koa-passport');
-const y18n = require('y18n')({ locale: 'ko' });
 const config = require('./config.json');
 
 const app = new Koa();
@@ -16,12 +12,17 @@ app.use(require('koa-helmet')());
 app.use(require('koa-conditional-get')());
 app.use(require('koa-etag')());
 app.use(require('koa-morgan')('dev'));
+app.use(require('koa-bodyparser')());
+app.use(require('koa-compress')({
+  flush: require('zlib').Z_SYNC_FLUSH
+}));
 
+// Serve up static files up on /public
 app.use(mount('/public', require('koa-static')('public')));
 
 app.use(require('koa-favicon')(require.resolve('./public/favicon.ico')));
-app.use(require('koa-bodyparser')());
 
+// Error handler
 app.use(async (ctx, next) => {
 	try {
 		await next();
@@ -32,36 +33,62 @@ app.use(async (ctx, next) => {
 		ctx.state.error = app.env === 'development' ? err : {};
 
 		ctx.status = err.status || 500;
+		debug('ERROR ' + ctx.status + ': ' + 'erro.message');
 		await ctx.render('error');
 	}
 });
 
+// Get site configs
 app.use((ctx, next) => {
-  ctx.state.site = config;
+	ctx.state.site = config.site;
+
+	let footerYear = ctx.state.site.footerYear;
+	let currentYear = (new Date()).getFullYear();
+	ctx.state.site.footerYear = footerYear + (footerYear !== currentYear ? ' - ' + currentYear : 0)
+	return next();
+});
+
+// Internalisation support
+const y18n = require('y18n')({ locale: 'ko' });
+app.use((ctx, next) => {
   ctx.state.__ = y18n.__;
   return next();
 });
 
-app.use((ctx, next) => {
-	ctx.state.Flash = class {
+// Mongoose setup
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+if (app.env === 'development') {
+	mongoose.set('debug', true);
+}
+mongoose.connect(config.mongodb);
 
-	};
-	ctx.state.flash = ctx.session.flash;
+// Set up sessions
+app.keys = config.keys;
+app.use(require('koa-session')({ key: 'tgr:sess' }, app));
+
+// Flash message middleware
+app.use((ctx, next) => {
+	// Get session flashes into state flash
+	// Then flush session flash
+	ctx.state.flash = ctx.session.flash || new Array();
 	delete ctx.session.flash;
+
+	// A container to get state flash in its finalised state
+	ctx.state.getMessages = () => {
+		// and return JSON stringified stringy thingy
+		return JSON.stringify(ctx.state.flash || new Array());
+	};
+
 	return next();
 });
 
-app.use(require('koa-compress')({
-  flush: require('zlib').Z_SYNC_FLUSH
-}));
-
-app.keys = config.keys;
-app.use(require('koa-session')({
-  maxAge: 24 * 60 * 60 * 1000 // One Day
-}, app));
-
+// CSRF support
+const csrf = require('koa-csrf');
 app.use(new csrf());
 
+// Passport setup
+const passport = require('koa-passport');
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -71,11 +98,9 @@ passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
-mongoose.Promise = global.Promise;
-mongoose.connect(config.mongodb);
-
+// Routes
 app.use(mount('/', require('./routes/index')));
 app.use(mount('/auth', require('./routes/auth')));
-
+app.use(mount('/admin', require('./routes/admin')));
 
 module.exports = app;

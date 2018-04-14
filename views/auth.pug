@@ -1,39 +1,57 @@
 extends layout
 
+include form.components.pug
+
 block content
-	section.tgr-auth
-		if form.register
-			h2 #{__('Register')}
-		else
-			h2 #{__('Log in')}
-		form(method='post' action=form.action)
+	section.form.auth
+		h2
+			if form.register
+				| #{__('Register')}
+			else
+				| #{__('Log in')}
+			
+		script.
+			var form = new Vue({
+				data: {
+					username: '!{ form.user.username ? form.user.username : '' }',
+					password: '',
+					confirmPassword: '',
+					name: '!{ form.user.name ? form.user.name : '' }',
+					register: !{ form.register }
+				},
+				computed: {
+					usernameFail: function() {
+						var length = /^[a-zA-Z0-9._@-]{0,32}$/.test(this.username);
+						var chars = !(/[._@-]{2,}/.test(this.username));
+						return !(length && chars) && (this.username !== '');
+					},
+					passwordFail: function() {
+						return (this.password !== this.confirmPassword) && (this.confirmPassword !== '') && this.register;
+					},
+					hasError: function() {
+						return this.usernameFail || this.passwordFail;
+					}
+				}
+			});
+
+		form(method='post', action=form.action, v-bind:class='{ error: hasError }')
 			input(type='hidden' name='_csrf' value=form.csrf)
-			section.tgr-inputs
-				div
-					label
-						i.tgr-icon.user
-						input(type='text' name='username' placeholder=__('Username') value=(form.user ? form.user.username : false) autocomplete='off' required spellcheck='false')
-				div
-					label
-						i.tgr-icon.key
-						input(type='password' name='password' placeholder=__('Password'))
+
+			section.inputs
+				+form-field('text', 'username', 'Username', form.user.username)(required spellcheck='false' v-model='username' v-bind:class='{ error: usernameFail }')
+				+form-field('password', 'password', 'Password')(v-model='password')
+
 				if form.register
-					div
-						label
-							i
-							input(type='password' name='confirmPassword' placeholder=__('Confirm Password'))
-					div
-						label
-							i
-							input(type='text' name='name' placeholder=__('Name') value=(form.user ? form.user.name : false))
-			section.tgr-buttons
-				button
-					i.tgr-btn.circular.check.accent
-					if form.register
-						span #{__('Register')}
-					else
-						span #{__('Log in')}
-				unless form.register
-					a(href='/auth/register')
-						i.tgr-btn.circular.plus
-						span #{__('Register')}
+					+form-field('password', 'confirmPassword', 'Confirm Password')(v-model='confirmPassword' v-bind:class='{ error: passwordFail }')
+					+form-field('text', 'name', 'Name', form.user.name)(v-model='name')
+
+			section.buttons
+				if form.register
+					+button('button', 'check', 'Register')(class='accent')
+
+				else
+					+button('button', 'check', 'Log in')(class='accent')
+					+button('a', 'plus', 'Register')(href='/auth/register')
+				
+		script.
+			form.$mount('.form.auth > form');

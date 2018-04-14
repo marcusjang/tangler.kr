@@ -1,0 +1,24 @@
+mixin form-field(type, name, title, value, hasTitle)
+	div
+		label
+			if hasTitle
+				span #{__(title)}
+			else
+				i.icon(class=name)
+			input(type=type, name=name, placeholder=(!hasTitle) ? __(title) : false, value=value)&attributes(attributes)
+			span
+		if block
+			block
+
+mixin button-inner(icon, text)
+	i.btn.circular(class=icon, class!=attributes.class)
+	span #{__(text)}
+
+mixin button(type, icon, text)
+	if (type === 'button')
+		button
+			+button-inner(icon, text)(class!=attributes.class)
+
+	else if (type === 'a')
+		a(href!=attributes.href)
+			+button-inner(icon, text)(class!=attributes.class)
